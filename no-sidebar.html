@@ -1,15 +1,11 @@
 <!DOCTYPE HTML>
-<!--
-	ZeroFour by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
 	<head>
 		<title>Account</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<script src="assets/js/includehtml.js"></script>
 	</head>
 	<body class="no-sidebar is-preload">
 		<div id="page-wrapper">
@@ -17,31 +13,7 @@
 			<!-- Header Wrapper -->
 				<div id="header-wrapper">
 					<div class="container">
-
-						<!-- Header -->
-							<header id="header">
-								<div class="inner">
-
-									<!-- Logo -->
-								
-										<h1><a href="index.html" id="logo">Ride Share</a></h1>
-
-									<!-- Nav -->
-										<nav id="nav">
-											<ul>
-												<li><a href="index.html">Home</a></li>
-												
-													
-												<li><a href="left-sidebar.html">Open Requests</a></li>
-												<li><a href="right-sidebar.html">My Rides</a></li>
-												<li class="current_page_item"><a href="no-sidebar.html">Account</a></li>
-												<li><a href="no-sidebar2.html">Contact Us</a></li>
-											</ul>
-										</nav>
-
-								</div>
-							</header>
-
+						<div w3-include-html="header.html"></div>
 					</div>
 				</div>
 
@@ -135,15 +107,14 @@
 				</div>
 
 		</div>
-
-
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.dropotron.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
-
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.dropotron.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+		<script>
+            includeHTML();
+		</script>
 	</body>
 </html>
