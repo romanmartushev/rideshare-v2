@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Customer</title>
+    <title>Template</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -17,7 +17,7 @@
                     <nav id="nav">
                         <ul>
                             <li><a href="index.html">Home</a></li>
-                            <li class="current_page_item"><a href="client.html">My Account</a></li>
+                            <li class="current_page_item"><a href="driver.html">My Account</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -29,7 +29,7 @@
             <div class="inner">
                 <div class="container">
                     <div class="row">
-                        <div class="col-4 col-12-medium">
+                        <div class="col-xs-4">
                             <div id="sidebar">
                                 <section>
                                     <header class="major">
@@ -43,15 +43,15 @@
                                 </section>
                             </div>
                         </div>
-                        <div class="col-8 col-12-medium imp-medium">
+                        <div class="col-xs-8">
                             <div id="content">
                                 <article>
                                     <header class="major">
                                         <h2>Welcome {{user.name}}!</h2>
                                     </header>
                                     <div class="row justify-content-center">
-                                        <div class="col-md-12">
-                                            <div class="card" id="customer-main">
+                                        <div class="col-xs-12">
+                                            <div class="card">
                                                 <div class="card-header pb-0">
                                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                                         <li class="nav-item">
@@ -63,17 +63,15 @@
                                                         <li class="nav-item">
                                                             <a class="nav-link" id="pills-view-requests-tab" data-toggle="pill" href="#pills-view-requests" role="tab" aria-controls="pills-view-requests" aria-selected="false">View Requests</a>
                                                         </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" id="pills-requests-tab" data-toggle="pill" href="#pills-request" role="tab" aria-controls="pills-request" aria-selected="false">Make Request</a>
-                                                        </li>
                                                     </ul>
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="row">
-                                                        <div class="col-sm-12">
+                                                        <div class="col-xs-12">
                                                             <div class="tab-content" id="pills-tabContent">
-                                                                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                                                                    Welcome {{user.name}}!
+                                                                <div class="tab-pane fade" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                                                                    <div id="map" :style="mapHeight"></div>
+                                                                    <div id="directionsPanel" :style="directionsHeight" style="overflow-y: scroll"></div>
                                                                 </div>
                                                                 <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                                                                     <table class="table">
@@ -94,61 +92,20 @@
                                                                     </table>
                                                                 </div>
                                                                 <div class="tab-pane fade" id="pills-view-requests" role="tabpanel" aria-labelledby="pills-view-requests-tab" style="color: black">
+                                                                    {{message}}
                                                                     <div v-for="(request, index) in requests">
                                                                         <button class="btn btn-link" data-toggle="collapse" :data-target="'#request'+index">Request {{ index+1 }}</button>
                                                                         <div :id="'request'+index" class="collapse">
                                                                             <ul>
                                                                                 <li>Status: {{ request.status === 1 ? 'in-route' : 'pending' }}</li>
-                                                                                <li>Pick Up Address: {{ request.pick_up_address }}</li>
-                                                                                <li>Destination Address: {{ request.destination_address }}</li>
+                                                                                <li>Pick Up Address <button type="button" class="btn" @click="getDirections(request.pick_up_address)">{{ request.pick_up_address }}</button></li>
+                                                                                <li>Destination Address: <button type="button" class="btn" @click="getDirections(request.destination_address)">{{ request.destination_address }}</button></li>
                                                                                 <li>Time: {{ request.time }}</li>
                                                                                 <li>Date: {{ request.date }}</li>
-                                                                                <li>Estimated Length: {{ request.estimated_length }}</li>
+                                                                                <li>Duration of Service: {{ request.estimated_length }}</li>
+                                                                                <li><button type="button" class="btn" @click="finishedRequest(request.id)">Mark as Done</button></li>
                                                                             </ul>
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="tab-pane fade" id="pills-request" role="tabpanel" aria-labelledby="pills-request-tab">
-                                                                    <div id="customer-request">
-                                                                        <div class="row">
-                                                                            <div class="form-group col-xs-12">
-                                                                                <label for="full_name">Full Name:</label>
-                                                                                <input class="form-control" type="text" id="full_name" placeholder="Full Name" name="full_name" v-model="user.name" required>
-                                                                            </div>
-                                                                            <div class="form-group col-xs-12">
-                                                                                <label for="request_phone">Phone Number:</label>
-                                                                                <input class="form-control" type="tel" id="request_phone" placeholder="1-(555)-555-5555" name="request_phone" v-model="user.phone_number" required>
-                                                                            </div>
-                                                                            <div class="form-group col-xs-12">
-                                                                                <label for="current">Current Address</label>
-                                                                                <input type="text" class="form-control" id="current_address" aria-describedby="current_address_help" name="current" placeholder="Current Address" v-model="pick_up_address" required>
-                                                                                <small id="current_address_help" class="form-text text-muted">Address where you should be picked up at</small>
-                                                                            </div>
-                                                                            <div class="form-group col-xs-12">
-                                                                                <label for="destination">Destination address</label>
-                                                                                <input type="text" class="form-control" id="destination_address" aria-describedby="destination_address_help" name="destination" placeholder="Destination Address" v-model="destination_address" required>
-                                                                                <small id="destination_address_help" class="form-text text-muted">Address where the you should be taken</small>
-                                                                            </div>
-                                                                            <div class="form-group col-xs-12">
-                                                                                <label for="duration">Estimated Length</label>
-                                                                                <input type="text" class="form-control" id="duration_of_service" aria-describedby="duration_help" name="duration" placeholder="Duration of Service" v-model="estimated_length" required>
-                                                                                <small id="duration_help" class="form-text text-muted">How much time will you be spending at the destination(s)</small>
-                                                                            </div>
-                                                                            <div class="form-group col-xs-12">
-                                                                                <label for="time">Time of Pickup</label>
-                                                                                <input type="text" class="form-control" id="time" name="time" placeholder="24:59" v-model="time" required>
-                                                                            </div>
-                                                                            <div class="form-group col-xs-12">
-                                                                                <label for="date">Date of Pickup</label>
-                                                                                <input type="text" class="form-control" id="date" name="date" placeholder="mm/dd/yyyy" v-model="date" required>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row mb-5">
-                                                                            <div class="col-xs-12 text-center">
-                                                                                <button class="btn btn-dark" @click="submitRequest">Make Request</button>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div>{{message}}</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -226,6 +183,7 @@
 <script src="assets/js/main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
-<script src="assets/js/vue/client.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKMXgNVtiSI2CEeHdQpxRjIhrWbqJeOzc"></script>
+<script src="assets/js/vue/driver.js"></script>
 </body>
 </html>

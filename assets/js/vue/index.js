@@ -12,7 +12,7 @@ var app = new Vue({
         sign_up_email: '',
         sign_up_password: '',
         sign_up_password_confirm: '',
-        user: JSON.parse(localStorage.getItem('rideshare.user'))
+        user: JSON.parse(localStorage.getItem('rideshare.user')),
     },
     methods: {
         login: function () {
@@ -28,6 +28,7 @@ var app = new Vue({
                         vm.sign_up = false;
                         vm.sign_in = false;
                         vm.user = JSON.parse(localStorage.getItem('rideshare.user'));
+                        vm.user.role = localStorage.getItem('rideshare.role');
                     }
                 })
                 .catch(function (error) {
@@ -53,5 +54,6 @@ var app = new Vue({
     },
     mounted: function () {
         this.user = JSON.parse(localStorage.getItem('rideshare.user'));
+        this.user.role = localStorage.getItem('rideshare.role');
     }
 });

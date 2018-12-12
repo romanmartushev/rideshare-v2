@@ -18,15 +18,14 @@
 							<nav id="nav">
 								<ul>
 									<li class="current_page_item"><a href="index.html">Home</a></li>
-									<li v-if="loggedIn"><a href="client.html">My Account</a></li>
-									<li><a href="template.html">Template</a></li>
+									<li v-if="loggedIn"><a :href="user.role+'.html'">My Account</a></li>
 								</ul>
 							</nav>
 						</div>
 					</header>
 					<div id="banner">
 						<img src="images/logo3.png"/>
-						<h2 v-if="!loggedIn"><strong>Ride Share:</strong> A free ride services<br /></h2>
+						<h2 v-if="!loggedIn"><strong>Ride Share:</strong> A free ride service<br /></h2>
 						<h2 v-if="loggedIn">Welcome, {{ user.name }}</h2>
 						<a class="button large icon fa-check-circle" @click="sign_up=!sign_up,sign_in=false" v-if="!loggedIn">sign up</a>
 						<a class="button large icon fa-check-circle" @click="sign_in=!sign_in,sign_up=false" v-if="!loggedIn">sign in</a>
@@ -189,14 +188,14 @@
 				</footer>
 			</div>
 		</div>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+        <script src="assets/js/vue/index.js"></script>
 		<script src="assets/js/jquery.min.js"></script>
 		<script src="assets/js/jquery.dropotron.min.js"></script>
 		<script src="assets/js/browser.min.js"></script>
 		<script src="assets/js/breakpoints.min.js"></script>
 		<script src="assets/js/util.js"></script>
 		<script src="assets/js/main.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
-		<script src="assets/js/vue/index.js"></script>
 	</body>
 </html>

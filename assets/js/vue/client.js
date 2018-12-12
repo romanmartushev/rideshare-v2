@@ -1,42 +1,53 @@
 var app = new Vue({
     el: '#page-wrapper',
     data: {
-        loggedIn: localStorage.getItem('rideshare.role') != null,
+        message: '',
         user: JSON.parse(localStorage.getItem('rideshare.user')),
-        requests: []
+        requests: [],
+        pick_up_address: '',
+        destination_address: '',
+        estimated_length: '',
+        time: '',
+        date: ''
     },
     methods: {
-        login: function () {
+        getRequests: function () {
             var vm = this;
-            axios.get('https://rideshareapi.herokuapp.com/api/client-requests?id='+user.id)
+            axios.get('https://rideshareapi.herokuapp.com/api/client-requests?id='+vm.user.id)
                 .then(function(response){
-
+                    vm.requests = response.data;
                 })
                 .catch(function (error) {
 
                 })
         },
-        register: function(){
+        submitRequest: function(){
             var vm = this;
-            axios.get('https://rideshareapi.herokuapp.com/api/register?first_name='+vm.sign_up_first_name+'&last_name='+vm.sign_up_last_name+'&email='+vm.sign_up_email+'&phone_number='+vm.sign_up_phone_number+'&password='+vm.sign_up_password+'&confirm_password='+vm.sign_up_password_confirm)
+            axios.get('https://rideshareapi.herokuapp.com/api/create-request?client_id='+vm.user.id+'&destination_address='+vm.destination_address+'&pick_up_address='+vm.pick_up_address+'&estimated_length='+vm.estimated_length+'&time='+vm.time+'&date='+vm.date)
                 .then(function(response){
-                    console.log(response);
+                    if(response.data.hasOwnProperty('client_id')){
+                        vm.message = 'Request successfully created';
+                        vm.destination_address = '';
+                        vm.estimated_length = '';
+                        vm.time = '';
+                        vm.date = '';
+                        vm.getRequests();
+                    }
                 })
                 .catch(function (error) {
-
-                })
+                    vm.message = 'There was an issue creating the request';
+                });
+            setTimeout(function(){
+                vm.message = '';
+            },5000)
         },
-        logout: function(){
-            localStorage.removeItem('rideshare.role');
-            localStorage.removeItem('rideshare.user');
-            this.loggedIn = false;
-        }
-
     },
     mounted: function () {
         this.user = JSON.parse(localStorage.getItem('rideshare.user'));
-        if(this.user === null){
+        if(this.user === null || localStorage.getItem('rideshare.role') !== 'client'){
             location.href = (window.location+'').replace('/client', '/index');
+        }else{
+            this.getRequests();
         }
-    }
+    },
 });
