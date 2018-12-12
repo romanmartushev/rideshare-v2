@@ -16,8 +16,6 @@ var app = new Vue({
     },
     methods: {
         login: function () {
-            //gutmann.christa@corkery.info
-            //secret
             var vm = this;
             axios.get('https://rideshareapi.herokuapp.com/api/login?email='+vm.sign_in_email+'&password='+vm.sign_in_password)
                 .then(function(response){
@@ -46,14 +44,25 @@ var app = new Vue({
                 })
         },
         logout: function(){
-            localStorage.removeItem('rideshare.role');
-            localStorage.removeItem('rideshare.user');
             this.loggedIn = false;
+            var vm = this;
+            axios.get('https://rideshareapi.herokuapp.com/api/logout?email='+vm.user.email)
+                .then(function(response){
+                    console.log(response);
+                    localStorage.removeItem('rideshare.role');
+                    localStorage.removeItem('rideshare.user');
+                    vm.user = JSON.parse(localStorage.getItem('rideshare.user'));
+                })
+                .catch(function (error) {
+
+                })
         }
         
     },
     mounted: function () {
         this.user = JSON.parse(localStorage.getItem('rideshare.user'));
-        this.user.role = localStorage.getItem('rideshare.role');
+        if(this.user !== null){
+            this.user.role = localStorage.getItem('rideshare.role');
+        }
     }
 });

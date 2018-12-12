@@ -19,6 +19,7 @@ var app = new Vue({
             height: '0',
             width: '100%',
         },
+        myRequests: [],
     },
     methods: {
         getRequests: function () {
@@ -26,10 +27,20 @@ var app = new Vue({
             axios.get('https://rideshareapi.herokuapp.com/api/serviceable-requests')
                 .then(function(response){
                     vm.requests = response.data;
+                    vm.getMyRequests();
                 })
                 .catch(function (error) {
 
                 })
+        },
+        getMyRequests: function() {
+            this.myRequests = [];
+            var vm = this;
+            this.requests.forEach(function(request){
+                if(request.driver_id === vm.user.id){
+                    vm.myRequests.push(request);
+                }
+            });
         },
         getLocation: function() {
             // Checks to see if we are able to get the location of the driver
@@ -106,6 +117,16 @@ var app = new Vue({
             setTimeout(function(){
                 vm.message = '';
             },5000);
+        },
+        acceptRequest: function(request_id){
+            var vm = this;
+            axios.get('https://rideshareapi.herokuapp.com/api/accept-request?request_id='+request_id+'&driver_id='+vm.user.id)
+                .then(function(response){
+                    vm.getRequests();
+                })
+                .catch(function (error) {
+
+                });
         }
     },
     mounted: function () {
