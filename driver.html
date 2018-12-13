@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Driver</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body class="left-sidebar is-preload">
+<div id="page-wrapper">
+    <div id="header-wrapper">
+        <div class="container">
+            <header id="header">
+                <div class="inner">
+                    <h1><a href="index.html" id="logo">Ride Share</a></h1>
+                    <nav id="nav">
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li class="current_page_item"><a href="driver.html">My Account</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+        </div>
+    </div>
+    <div id="main-wrapper">
+        <div class="wrapper style2">
+            <div class="inner">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="content">
+                                <article>
+                                    <header class="major">
+                                        <h2>Welcome {{user.name}}!</h2>
+                                    </header>
+                                    <div class="row justify-content-center">
+                                        <div class="col-xs-4">
+                                            <div id="sidebar">
+                                                <a href="index.html"><img class="img-responsive" src="images/small-logo.png"/></a>
+                                                <h2>Subheading</h2>
+                                                <p>Put something here.</p>
+                                                <button class="btn">Find out more</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                                        <li class="nav-item active">
+                                                            <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Dashboard</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="pills-view-requests-tab" data-toggle="pill" href="#pills-view-requests" role="tab" aria-controls="pills-view-requests" aria-selected="false">View Requests</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="pills-my-requests-tab" data-toggle="pill" href="#pills-my-requests" role="tab" aria-controls="pills-my-requests" aria-selected="false">My Requests</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="tab-content" id="pills-tabContent">
+                                                            <div class="tab-pane fade active in" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                                                                <div id="map" :style="mapHeight"></div>
+                                                                <div id="directionsPanel" :style="directionsHeight" style="overflow-y: scroll"></div>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                                                <table class="table">
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <th scope="row">Full Name</th>
+                                                                        <td>{{user.name}}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">Phone Number</th>
+                                                                        <td>{{user.phone_number}}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">Email</th>
+                                                                        <td>{{user.email}}</td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="pills-view-requests" role="tabpanel" aria-labelledby="pills-view-requests-tab" style="color: black">
+                                                                {{message}}
+                                                                <div v-for="(request, index) in requests">
+                                                                    <a v-if="parseInt(request.status) === 0" class="btn btn-link" data-toggle="collapse" :data-target="'#request'+index">Request {{ index+1 }}</a>
+                                                                    <div v-if="parseInt(request.status) === 0" :id="'request'+index" class="collapse">
+                                                                        <ul>
+                                                                            <li><button type="button" class="btn" @click="acceptRequest(request.id)">Accept</button></li>
+                                                                            <li>Pick Up Address <button type="button" class="btn" @click="getDirections(request.pick_up_address)">{{ request.pick_up_address }}</button></li>
+                                                                            <li>Destination Address: <button type="button" class="btn" @click="getDirections(request.destination_address)">{{ request.destination_address }}</button></li>
+                                                                            <li>Time: {{ request.time }}</li>
+                                                                            <li>Date: {{ request.date }}</li>
+                                                                            <li>Estimated Length: {{ request.estimated_length }}</li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="pills-my-requests" role="tabpanel" aria-labelledby="pills-my-requests-tab" style="color: black">
+                                                                {{message}}
+                                                                <div v-for="(request, index) in myRequests">
+                                                                    <a class="btn btn-link" data-toggle="collapse" :data-target="'#my_request'+index">Request {{ index+1 }}</a>
+                                                                    <div :id="'my_request'+index" class="collapse">
+                                                                        <ul>
+                                                                            <li>Pick Up Address <button type="button" class="btn" @click="getDirections(request.pick_up_address)">{{ request.pick_up_address }}</button></li>
+                                                                            <li>Destination Address: <button type="button" class="btn" @click="getDirections(request.destination_address)">{{ request.destination_address }}</button></li>
+                                                                            <li>Time: {{ request.time }}</li>
+                                                                            <li>Date: {{ request.date }}</li>
+                                                                            <li>Estimated Length: {{ request.estimated_length }}</li>
+                                                                            <li><button type="button" class="btn" @click="finishedRequest(request.id)">Mark as Done</button></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-wrapper">
+        <footer id="footer" class="container">
+            <div class="row">
+                <section>
+                    <h2><strong>Ride Share</strong></h2>
+                    <p>Hi! This is <strong>Ride Share</strong>, a free ride service site
+                    </p>
+                    <a href="#" class="button alt icon fa-arrow-circle-right">Learn More</a>
+                </section>
+                <section>
+                    <h2>Get in touch</h2>
+                    <div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <dl class="contact">
+                                    <dt>Twitter</dt>
+                                    <dd><a href="#">@untitled-corp</a></dd>
+                                    <dt>Facebook</dt>
+                                    <dd><a href="#">facebook.com/untitled</a></dd>
+                                    <dt>WWW</dt>
+                                    <dd><a href="#">untitled.tld</a></dd>
+                                    <dt>Email</dt>
+                                    <dd><a href="#">user@untitled.tld</a></dd>
+                                </dl>
+                            </div>
+                            <div class="col-xs-6">
+                                <dl class="contact">
+                                    <dt>Address</dt>
+                                    <dd>
+                                        1234 Fictional Rd<br />
+                                        Longville, MN 56655<br />
+                                        USA
+                                    </dd>
+                                    <dt>Phone</dt>
+                                    <dd>(000) 000-0000</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="col-xs-12">
+                    <div id="copyright">
+                        <ul class="menu">
+                            <li>&copy; Untitled. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.dropotron.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=API_KEY_HERE"></script>
+<script src="assets/js/vue/driver.js"></script>
+</body>
+</html>
